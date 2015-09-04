@@ -45,12 +45,12 @@ MyjQuery.$ = (function(){
         } else {
           url += '/' + arg["data"]["id"];
           for (var key in arg["data"]) {
-            if (key !== 'id') {            
+            if (key !== 'id') {
               dataQuery += key + '=' + arg["data"][key];
             }
           }
         }
-      }
+      };
 
       // xhr.onreadystatechange = function () {
       //   if (xhr.readyState === 4) {
@@ -58,18 +58,30 @@ MyjQuery.$ = (function(){
       //   }
       // }
 
-      if (arg["error"]) {
-        xhr.addEventListener( "error", arg["error"], false);
-      }
+      xhr.onreadystatechange = function(){
+        if (xhr.readyState === 4){
+          console.log(arg["complete"]);
+          arg["complete"]();
+          if (xhr.status >= 200 && xhr.status < 300){
+            arg["success"]();
+          } else {
+            arg["error"]();
+          }
+        }
+      };
 
-      if (arg["success"]) {
-        xhr.addEventListener( "load", arg["success"], false);
-      }
+      // if (arg["error"]) {
+      //   xhr.addEventListener( "error", arg["error"], false);
+      // }
 
-      if (arg["complete"]) {
-        xhr.addEventListener( "error", arg["complete"], false);
-        xhr.addEventListener( "load", arg["complete"], false);
-      }
+      // if (arg["success"]) {
+      //   xhr.addEventListener( "load", arg["success"], false);
+      // }
+
+      // if (arg["complete"]) {
+      //   xhr.addEventListener( "error", arg["complete"], false);
+      //   xhr.addEventListener( "load", arg["complete"], false);
+      // }
 
       xhr.open(method, url, async);
 
@@ -79,7 +91,6 @@ MyjQuery.$ = (function(){
           xhr.setRequestHeader(key, arg["headers"][key]);
         }
       }
-
       xhr.send(dataQuery);
     }
   }
@@ -91,10 +102,10 @@ MyjQuery.$ = (function(){
     };
     if (typeof options === "object") {
       for (var key in options) {
-        arg.key = options.key;
+        arg[key] = options[key];
       }
     } else {
-      console.log("The input options must be an Object!")
+      console.log("The input options must be an Object!");
     }
     ajax(arg);
   }
@@ -106,10 +117,10 @@ MyjQuery.$ = (function(){
     };
     if (typeof options === "object") {
       for (var key in options) {
-        arg.key = options.key;
+        arg[key] = options[key];
       }
     } else {
-      console.log("The input options must be an Object!")
+      console.log("The input options must be an Object!");
     }
     ajax(arg);
   }
@@ -132,10 +143,10 @@ $(document).ready(function(){
   //   complete: function() { console.log("complete") }
   // });
 
-  MyjQuery.$.get("http://reqr.es/api/users", {
-    success: function() { console.log("success1") },
-    error: function() { console.log("error1") },
-    complete: function() { console.log("complete1") }
+  MyjQuery.$.post("http://reqr.es/api/users", {
+    success: function() { console.log("success1"); },
+    error: function() { console.log("error1"); },
+    complete: function() { console.log("complete1"); }
   });
-})
+});
 
